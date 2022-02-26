@@ -23,4 +23,5 @@ void rec_flood_fill(unsigned char *pixel_data, int img_width, int img_height,
 int point_r(int x, int y, int img_width);
 int point_b(int x, int y, int img_width);
 int point_g(int x, int y, int img_width);
+int isSameColor(int orig_r, int orig_g, int orig_b, int r, int g, int b);
 #endif // CS220_PAINT_H

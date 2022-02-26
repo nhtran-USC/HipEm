@@ -57,7 +57,7 @@ int write_image(const char *filename, int width, int height, const unsigned char
   // TODO: implement this function
   FILE *out = fopen(filename, "w");
   if (out == NULL) {
-    printf("HEREE");
+    printf("ERROR");
     return 0;
   }
 
@@ -68,7 +68,6 @@ int write_image(const char *filename, int width, int height, const unsigned char
 
   for(int i = 0; i < width * height * 3; i++) {
     fprintf(out, "%x ", buf[i]);
-    fprintf(out, " ");
     if(i % 23 == 0 && i != 0) {
       fprintf(out, "\n");
     }
@@ -91,44 +90,14 @@ void render_rectangle(unsigned char *pixel_data, int img_width, int img_height,
                       int rect_x, int rect_y, int rect_w, int rect_h,
                       int r, int g, int b) {
   // TODO: implement this function
-  // int startingPoint = 3 * rect_y * img_width + rect_x * 3;
-  // for(int i = startingPoint; i < startingPoint + rect_h * img_width * 3; i+= img_width * 3) {
-  //   if(i > startingPoint + img_height * img_width * 3) {
-  //     i = startingPoint + img_height * img_width * 3 - 1;
-  //   }
-  //   for(int j = i; j < i + rect_w * 3; j+=3) {
-  //     if(j > i + img_width * 3) {
-  //       j = i + img_width * 3 - 1;
-  //     }
-  //     for(int k = j; k < j + 3; k++){
-  //       if(k - j == 0) {
-  //         pixel_data[k] = r;
-  //       }
-  //       else if(k - j == 1) {
-  //         pixel_data[k] = g;
-  //       }
-  //       else {
-  //         pixel_data[k] = b;
-  //       }
-  //     }
-  //   }
-  // }
-
-  // printf("%d ", rect_x);
-  // printf("%d", rect_h);
   for (int i = rect_y; i < rect_y + rect_h; i++) {
-    
+
     for (int j = rect_x; j < rect_x + rect_w; j++) {
       pixel_data[point_r(j, i, img_width)] = r;
       pixel_data[point_g(j, i, img_width)] = g;
       pixel_data[point_b(j, i, img_width)] = b;
     }
   }
-  // printf("HERERERER");
-  // printf("%d", rect_h);
-  // printf("%d", rect_w);
-
-  // for ()
 }
 
 int point_r(int x, int y, int img_width) {
@@ -145,6 +114,24 @@ void render_ellipse(unsigned char *pixel_data, int img_width, int img_height,
                       double x1, double y1, double x2, double y2, double len,
                       int r, int g, int b) {
   // TODO: implement this function
+  double focal_point_dist = geom_dist(x1, y1, x2, y2);
+  // double focal_point_dist = 0;
+  double first_focal_to_pixel_dist = 0;
+  double second_focal_to_pixel_dist = 0;
+  double sum = 0;
+
+  for(int y = 0; y < img_height; y++) {
+    for(int x = 0; x < img_width; x++) {
+      first_focal_to_pixel_dist = geom_dist(x, y, x1, y1);
+      second_focal_to_pixel_dist = geom_dist(x, y, x2, y2);
+      sum = first_focal_to_pixel_dist + second_focal_to_pixel_dist + focal_point_dist;
+      if(sum <= len) {
+        pixel_data[point_r(x, y, img_width)] = r;
+        pixel_data[point_g(x, y, img_width)] = g;
+        pixel_data[point_b(x, y, img_width)] = b;
+      }
+    }
+  }
 }
 
 
@@ -152,7 +139,10 @@ void render_ellipse(unsigned char *pixel_data, int img_width, int img_height,
 void flood_fill(unsigned char *pixel_data, int img_width, int img_height,
                 int x, int y, int r, int g, int b) {
   // TODO: implement this function
-
+  int orig_r = pixel_data[point_r(x, y, img_width)];
+  int orig_g = pixel_data[point_g(x, y, img_width)];
+  int orig_b = pixel_data[point_b(x, y, img_width)];
+  rec_flood_fill(pixel_data, img_width, img_height, x, y, orig_r, orig_g, orig_b, r, g, b, 1);
 }
 
 
@@ -163,5 +153,44 @@ void rec_flood_fill(unsigned char *pixel_data, int img_width, int img_height,
                     int r, int g, int b,
                     int dir) {
   // TODO: implement this function
+  // printf("recurse\n");
+  printf("x = %d y = %d\n", x, y);
+  if(x > img_width - 1 || y > img_height - 1 ) {
+    // printf("QUIT BOUND\n");
+    return;
+  }
+  
+  int current_r = pixel_data[point_r(x,y, img_width)];
+  int current_g = pixel_data[point_g(x,y, img_width)];
+  int current_b = pixel_data[point_b(x,y, img_width)];
+
+  // printf("orig_r: %d current_r: %d\n", orig_r, current_r);
+  // printf("orig_b: %d current_b: %d\n", orig_b, current_b);
+  // printf("orig_g: %d current_g: %d\n", orig_g, current_g);
+  if((orig_r != current_r) || (orig_g != current_g) || (orig_b != current_b)) {
+    // printf("QUIT COLOR\n");
+    return;
+  }
+
+  pixel_data[point_r(x,y, img_width)] = r;
+  pixel_data[point_b(x,y, img_width)] = b;
+  pixel_data[point_g(x,y, img_width)] = g;
+
+  rec_flood_fill(pixel_data, img_width, img_height, x + 1, y, orig_r, orig_g, orig_b, r, g, b, dir);
+  rec_flood_fill(pixel_data, img_width, img_height, x, y + 1, orig_r, orig_g, orig_b, r, g, b, dir);
+  rec_flood_fill(pixel_data, img_width, img_height, x - 1, y, orig_r, orig_g, orig_b, r, g, b, dir);
+  rec_flood_fill(pixel_data, img_width, img_height, x, y - 1, orig_r, orig_g, orig_b, r, g, b, dir);
+
+  rec_flood_fill(pixel_data, img_width, img_height, x + 1, y + 1, orig_r, orig_g, orig_b, r, g, b, dir);
+  rec_flood_fill(pixel_data, img_width, img_height, x + 1, y - 1, orig_r, orig_g, orig_b, r, g, b, dir);
+  rec_flood_fill(pixel_data, img_width, img_height, x - 1, y - 1, orig_r, orig_g, orig_b, r, g, b, dir);
+  rec_flood_fill(pixel_data, img_width, img_height, x - 1, y + 1, orig_r, orig_g, orig_b, r, g, b, dir);
+}
+
+int isSameColor(int orig_r, int orig_g, int orig_b, int r, int g, int b) {
+  if((orig_r == r) && (orig_g == g) && (orig_b == b)) {
+    return 1;
+  }
+  return 0;
 }
 

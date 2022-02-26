@@ -69,13 +69,23 @@ int main(int argc, char *argv[]) {
     case 'e':   // ellipse
       {
         // TODO: implement
-        
+        double x1 = 0;
+        double y1 = 0;
+        double x2 = 0;
+        double y2 = 0;
+        double len = 0;
+        fscanf(in, "%lf %lf %lf %lf %lf", &x1, &y1, &x2, &y2, &len);
+        render_ellipse(buf, width, height, x1, y1, x2, y2, len, r, g, b);
       }
       break;
 
     case 'f':   // flood fill
       {
         // TODO: implement
+        int x = 0;
+        int y = 0;
+        fscanf(in, "%d %d", &x, &y);
+        flood_fill(buf, width, height, x, y, r, g, b);
       }
       break;
 
@@ -97,7 +107,7 @@ int main(int argc, char *argv[]) {
   // TODO: try to write output file by calling write_image
   write_image(out_filename, width, height, buf);
   // TODO: if output couldn't be written, report error
-
+  
   printf("Success\n");
 
   return 0;
