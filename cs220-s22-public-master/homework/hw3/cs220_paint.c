@@ -91,7 +91,6 @@ void render_rectangle(unsigned char *pixel_data, int img_width, int img_height,
                       int r, int g, int b) {
   // TODO: implement this function
   for (int i = rect_y; i < rect_y + rect_h; i++) {
-
     for (int j = rect_x; j < rect_x + rect_w; j++) {
       pixel_data[point_r(j, i, img_width)] = r;
       pixel_data[point_g(j, i, img_width)] = g;
@@ -145,8 +144,6 @@ void flood_fill(unsigned char *pixel_data, int img_width, int img_height,
   rec_flood_fill(pixel_data, img_width, img_height, x, y, orig_r, orig_g, orig_b, r, g, b, 1);
 }
 
-
-
 void rec_flood_fill(unsigned char *pixel_data, int img_width, int img_height,
                     int x, int y,
                     int orig_r, int orig_g, int orig_b,
@@ -154,6 +151,8 @@ void rec_flood_fill(unsigned char *pixel_data, int img_width, int img_height,
                     int dir) {
   // TODO: implement this function
   // printf("recurse\n");
+
+  // base case  BOUND
   printf("x = %d y = %d\n", x, y);
   if(x > img_width - 1 || y > img_height - 1 ) {
     // printf("QUIT BOUND\n");
@@ -167,11 +166,14 @@ void rec_flood_fill(unsigned char *pixel_data, int img_width, int img_height,
   // printf("orig_r: %d current_r: %d\n", orig_r, current_r);
   // printf("orig_b: %d current_b: %d\n", orig_b, current_b);
   // printf("orig_g: %d current_g: %d\n", orig_g, current_g);
+
+  // base case color 
   if((orig_r != current_r) || (orig_g != current_g) || (orig_b != current_b)) {
     // printf("QUIT COLOR\n");
     return;
   }
 
+  // coloring
   pixel_data[point_r(x,y, img_width)] = r;
   pixel_data[point_b(x,y, img_width)] = b;
   pixel_data[point_g(x,y, img_width)] = g;
@@ -187,10 +189,4 @@ void rec_flood_fill(unsigned char *pixel_data, int img_width, int img_height,
   rec_flood_fill(pixel_data, img_width, img_height, x - 1, y + 1, orig_r, orig_g, orig_b, r, g, b, dir);
 }
 
-int isSameColor(int orig_r, int orig_g, int orig_b, int r, int g, int b) {
-  if((orig_r == r) && (orig_g == g) && (orig_b == b)) {
-    return 1;
-  }
-  return 0;
-}
 

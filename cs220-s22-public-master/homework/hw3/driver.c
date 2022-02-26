@@ -107,8 +107,9 @@ int main(int argc, char *argv[]) {
   // TODO: try to write output file by calling write_image
   write_image(out_filename, width, height, buf);
   // TODO: if output couldn't be written, report error
-  
-  printf("Success\n");
 
+  printf("Success\n");
+  // TODO: test valgrind
+  
   return 0;
 }
