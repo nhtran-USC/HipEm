@@ -5,7 +5,6 @@
 unsigned char *read_image(const char *filename, int *width, int *height);
 int write_image(const char *filename, int width, int height, const unsigned char *buf);
 
-/*
 // suggested helper functions for doing drawing operations
 double geom_dist(double x1, double y1, double x2, double y2);
 void render_rectangle(unsigned char *pixel_data, int img_width, int img_height,
@@ -21,6 +20,7 @@ void rec_flood_fill(unsigned char *pixel_data, int img_width, int img_height,
                     int orig_r, int orig_g, int orig_b,
                     int r, int g, int b,
                     int dir);
-*/
-
+int point_r(int x, int y, int img_width);
+int point_b(int x, int y, int img_width);
+int point_g(int x, int y, int img_width);
 #endif // CS220_PAINT_H

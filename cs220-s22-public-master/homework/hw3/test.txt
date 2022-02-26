@@ -1,0 +1,25 @@
+CXX=gcc
+CFLAGS=-std=c99 -pedantic -Wall -Wextra
+
+all: png2txt txt2png
+
+txt2png: txt2png.cpp pnglite.o cs220_paint.o
+	$(CXX) $(CFLAGS)  -o $@ $^
+	
+png2txt: png2txt.cpp pnglite.o cs220_paint.o
+	$(CXX) $(CFLAGS)  -o $@ $^
+
+# png2txt.o: png2txt.c pnglite.h pnglite.c cs220_paint.h cs220_paint.c 
+# 	$(CXX) $(CFLAGS) -c $< -o $@
+
+# txt2png.o: png2txt.c pnglite.h pnglite.c cs220_paint.h cs220_paint.c 
+# 	$(CXX) $(CFLAGS) -c $< -o $@
+
+pnglite.o: pnglite.h pnglite.c
+	$(CXX) $(CFLAGS) -c $< -o $@
+	
+cs220_paint.o: cs220_paint.h cs220_paint.c
+	$(CXX) $(CFLAGS) -c $< -o $@
+
+clean:
+	rm -f *.o txt2png png2txt
