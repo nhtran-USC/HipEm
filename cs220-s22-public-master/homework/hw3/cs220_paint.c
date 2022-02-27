@@ -66,7 +66,7 @@ int write_image(const char *filename, int width, int height, const unsigned char
 
   int num_vals = width * height * 3;
 
-  for(int i = 0; i < width * height * 3; i++) {
+  for(int i = 0; i < num_vals; i++) {
     fprintf(out, "%x ", buf[i]);
     if(i % 23 == 0 && i != 0) {
       fprintf(out, "\n");
@@ -90,11 +90,25 @@ void render_rectangle(unsigned char *pixel_data, int img_width, int img_height,
                       int rect_x, int rect_y, int rect_w, int rect_h,
                       int r, int g, int b) {
   // TODO: implement this function
+  int x = 0;
+  int y = 0;
   for (int i = rect_y; i < rect_y + rect_h; i++) {
+    if(i >= img_height) {
+      y = img_height - 1;
+    }
+    else {
+      y = i;
+    }
     for (int j = rect_x; j < rect_x + rect_w; j++) {
-      pixel_data[point_r(j, i, img_width)] = r;
-      pixel_data[point_g(j, i, img_width)] = g;
-      pixel_data[point_b(j, i, img_width)] = b;
+      if(j >= img_width) {
+        x = img_width - 1;
+      }
+      else {
+        x = j;
+      }
+      pixel_data[point_r(x, y, img_width)] = r;
+      pixel_data[point_g(x, y, img_width)] = g;
+      pixel_data[point_b(x, y, img_width)] = b;
     }
   }
 }
@@ -153,7 +167,7 @@ void rec_flood_fill(unsigned char *pixel_data, int img_width, int img_height,
   // printf("recurse\n");
 
   // base case  BOUND
-  printf("x = %d y = %d\n", x, y);
+  // printf("x = %d y = %d\n", x, y);
   if(x > img_width - 1 || y > img_height - 1 ) {
     // printf("QUIT BOUND\n");
     return;
@@ -177,7 +191,7 @@ void rec_flood_fill(unsigned char *pixel_data, int img_width, int img_height,
   pixel_data[point_r(x,y, img_width)] = r;
   pixel_data[point_b(x,y, img_width)] = b;
   pixel_data[point_g(x,y, img_width)] = g;
-
+  // recusrion 
   rec_flood_fill(pixel_data, img_width, img_height, x + 1, y, orig_r, orig_g, orig_b, r, g, b, dir);
   rec_flood_fill(pixel_data, img_width, img_height, x, y + 1, orig_r, orig_g, orig_b, r, g, b, dir);
   rec_flood_fill(pixel_data, img_width, img_height, x - 1, y, orig_r, orig_g, orig_b, r, g, b, dir);

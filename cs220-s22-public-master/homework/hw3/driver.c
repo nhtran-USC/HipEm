@@ -102,6 +102,7 @@ int main(int argc, char *argv[]) {
 
   // TODO: close input file
   fclose(in);
+  free(buf);
   // TODO: if an error occurred while processing commands, report it
 
   // TODO: try to write output file by calling write_image
@@ -110,6 +111,6 @@ int main(int argc, char *argv[]) {
 
   printf("Success\n");
   // TODO: test valgrind
-  
+
   return 0;
 }
