@@ -92,6 +92,8 @@ void render_rectangle(unsigned char *pixel_data, int img_width, int img_height,
   // TODO: implement this function
   int x = 0;
   int y = 0;
+  // Do lâu lâu ông thầy đặtc cái chiều dài của rect quá cái img_width với height nên ảnh nó bị tràn qua. này 
+  // ta giớ hạn nó lại nếu quá gioi hạn thì ko vẽ thêm gì hết
   for (int i = rect_y; i < rect_y + rect_h; i++) {
     if(i >= img_height) {
       y = img_height - 1;
